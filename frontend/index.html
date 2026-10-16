@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Control - Carbón IA</title>
+    <!-- Estilos CSS locales -->
+    <link rel="stylesheet" href="./css/styles.css">
+    <!-- Iconos Phosphor -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Navegación Lateral -->
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="ph-bold ph-fire logo-icon"></i>
+                <h2>Carbón<span>IA</span></h2>
+            </div>
+            <nav class="nav-menu">
+                <a href="#" class="nav-item active"><i class="ph-bold ph-squares-four"></i> Dashboard</a>
+                <a href="#" class="nav-item"><i class="ph-bold ph-shopping-bag"></i> Pedidos</a>
+                <a href="#" class="nav-item"><i class="ph-bold ph-users"></i> Clientes</a>
+                <a href="#" class="nav-item"><i class="ph-bold ph-robot"></i> Agente IA</a>
+            </nav>
+            <div class="agent-status">
+                <span class="status-dot"></span>
+                <span>Agente IA WhatsApp Conectado</span>
+            </div>
+        </aside>
+
+        <!-- Contenido Principal -->
+        <main class="main-content">
+            <header class="top-header">
+                <div>
+                    <h1>Monitoreo del Agente de Inteligencia Artificial</h1>
+                    <p class="subtitle">Atención autónoma vía WhatsApp: Gestión de clientes nuevos, antiguos, bultos y pagos</p>
+                </div>
+            </header>
+
+            <!-- Tarjetas de Métricas -->
+            <section class="cards-grid">
+                <div class="metric-card">
+                    <div class="card-icon orange"><i class="ph-bold ph-receipt"></i></div>
+                    <div class="card-info">
+                        <h3>Pedidos Registrados</h3>
+                        <p id="total-pedidos">0</p>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="card-icon amber"><i class="ph-bold ph-package"></i></div>
+                    <div class="card-info">
+                        <h3>Bultos Vendidos</h3>
+                        <p id="total-bultos">0</p>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="card-icon blue"><i class="ph-bold ph-user-plus"></i></div>
+                    <div class="card-info">
+                        <h3>Clientes Nuevos</h3>
+                        <p id="clientes-nuevos">0</p>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="card-icon green"><i class="ph-bold ph-currency-dollar"></i></div>
+                    <div class="card-info">
+                        <h3>Ventas Totales</h3>
+                        <p id="ventas-totales">$0</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Layout Dividido -->
+            <div class="dashboard-split">
+                <!-- Tabla de Pedidos -->
+                <section class="panel table-panel">
+                    <div class="panel-header">
+                        <h2><i class="ph-bold ph-list-numbers"></i> Pedidos Gestionados por el Agente</h2>
+                    </div>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Cliente</th>
+                                    <th>Tipo</th>
+                                    <th>Bultos</th>
+                                    <th>Total</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabla-pedidos">
+                                <!-- Se cargarán los pedidos dinámicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Consola del Agente de IA -->
+                <section class="panel chat-panel">
+                    <div class="panel-header">
+                        <h2><i class="ph-bold ph-robot"></i> Consola de Prueba del Agente IA</h2>
+                        <span class="chat-user-tag">Agente Activo</span>
+                    </div>
+                    <div class="chat-messages" id="chat-box">
+                        <!-- Mensajes cargados dinámicamente -->
+                    </div>
+                    
+                    <form id="chat-form" class="chat-input-container">
+                        <input type="text" id="chat-input" placeholder="Escribe un mensaje al Agente de IA..." autocomplete="off" required>
+                        <button type="submit" class="btn-send"><i class="ph-bold ph-paper-plane-right"></i></button>
+                    </form>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script src="./js/main.js"></script>
+</body>
+</html>

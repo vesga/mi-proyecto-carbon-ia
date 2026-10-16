@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  # 1. Frontend Nginx
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: carbon_frontend
+    restart: always
+    ports:
+      - "80:80" # Expuesto al puerto estándar HTTP de la web
+    mem_limit: 128m
+
+  # 2. Base de Datos PostgreSQL
+  postgres:
+    image: postgres:15-alpine
+    container_name: carbon_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: admin_carbon
+      POSTGRES_PASSWORD: TuPasswordSeguro123!
+      POSTGRES_DB: carbon_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    mem_limit: 256m
+
+  # 3. Orquestador n8n
+  n8n:
+    image: docker.n8n.io/n8nio/n8n:latest
+    container_name: carbon_n8n
+    restart: always
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_HOST=localhost
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      - NODE_ENV=production
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_HOST=postgres
+      - DB_POSTGRESDB_PORT=5432
+      - DB_POSTGRESDB_DATABASE=carbon_db
+      - DB_POSTGRESDB_USER=admin_carbon
+      - DB_POSTGRESDB_PASSWORD=TuPasswordSeguro123!
+      - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
+    volumes:
+      - n8n_data:/home/node/.n8n
+    depends_on:
+      - postgres
+    mem_limit: 400m
+
+volumes:
+  postgres_data:
+  n8n_data:
