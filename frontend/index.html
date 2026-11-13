@@ -3,14 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel de Control - Carbón IA</title>
+    <title>Portal de Cliente - Carbón IA</title>
     <!-- Estilos CSS locales -->
     <link rel="stylesheet" href="./css/styles.css">
     <!-- Iconos Phosphor -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    
+    <!-- Librería oficial de Supabase para navegador -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-    <div class="app-container">
+
+    <!-- PANTALLA DE ACCESO INTELIGENTE -->
+    <div id="auth-screen" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #0f172a; display: flex; justify-content: center; align-items: center; z-index: 9999;">
+        <div style="background: #1e293b; padding: 40px; border-radius: 16px; border: 1px solid #334155; width: 100%; max-width: 450px; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
+            <div style="text-align: center; margin-bottom: 25px;">
+                <i class="ph-bold ph-fire" style="font-size: 3rem; color: #ea580c;"></i>
+                <h2 style="color: #fff; font-size: 1.8rem; margin-top: 10px;">Carbón<span>IA</span></h2>
+                <p style="color: #94a3b8; font-size: 0.9rem; margin-top: 5px;">Digita tu teléfono para ingresar o registrarte</p>
+            </div>
+            
+            <form id="auth-form" style="display: flex; flex-direction: column; gap: 15px;">
+                <div>
+                    <label style="color: #cbd5e1; font-size: 0.85rem; display: block; margin-bottom: 5px;">Número de Teléfono</label>
+                    <input type="text" id="auth-telefono" placeholder="Ej: 3001234567" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: #fff; font-size: 1rem;">
+                </div>
+
+                <!-- Campo de Nombre oculto por defecto (aparece solo si el usuario es nuevo) -->
+                <div id="nombre-container" style="display: none;">
+                    <label style="color: #cbd5e1; font-size: 0.85rem; display: block; margin-bottom: 5px;">Nombre Completo (Nuevo Usuario)</label>
+                    <input type="text" id="auth-nombre" placeholder="Ej: Nikolas Vesga" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: #fff; font-size: 1rem;">
+                </div>
+
+                <button type="submit" id="auth-btn" style="padding: 12px; background: #ea580c; color: #fff; border: none; border-radius: 8px; font-weight: bold; font-size: 1rem; cursor: pointer; margin-top: 10px;">Verificar Teléfono</button>
+            </form>
+            <div id="auth-status" style="margin-top: 15px; font-size: 0.9rem; text-align: center; color: #38bdf8;"></div>
+        </div>
+    </div>
+
+    <!-- APLICACIÓN PRINCIPAL (Dashboard oculto hasta iniciar sesión) -->
+    <div class="app-container" id="app-dashboard" style="display: none;">
         <!-- Navegación Lateral -->
         <aside class="sidebar">
             <div class="logo">
@@ -18,103 +50,118 @@
                 <h2>Carbón<span>IA</span></h2>
             </div>
             <nav class="nav-menu">
-                <a href="#" class="nav-item active"><i class="ph-bold ph-squares-four"></i> Dashboard</a>
-                <a href="#" class="nav-item"><i class="ph-bold ph-shopping-bag"></i> Pedidos</a>
-                <a href="#" class="nav-item"><i class="ph-bold ph-users"></i> Clientes</a>
-                <a href="#" class="nav-item"><i class="ph-bold ph-robot"></i> Agente IA</a>
+                <a href="#" class="nav-item active" data-target="vista-portal"><i class="ph-bold ph-storefront"></i> Mi Portal</a>
+                <a href="#" class="nav-item" data-target="vista-pedidos"><i class="ph-bold ph-shopping-bag"></i> Mis Pedidos</a>
+                <a href="#" class="nav-item" data-target="vista-soporte"><i class="ph-bold ph-headset"></i> Soporte IA</a>
             </nav>
             <div class="agent-status">
                 <span class="status-dot"></span>
-                <span>Agente IA WhatsApp Conectado</span>
+                <span>Gemini Flash Lite Conectado</span>
             </div>
         </aside>
 
         <!-- Contenido Principal -->
         <main class="main-content">
-            <header class="top-header">
-                <div>
-                    <h1>Monitoreo del Agente de Inteligencia Artificial</h1>
-                    <p class="subtitle">Atención autónoma vía WhatsApp: Gestión de clientes nuevos, antiguos, bultos y pagos</p>
-                </div>
-            </header>
+            
+            <!-- Vista 1: Mi Portal -->
+            <div id="vista-portal" class="vista-contenido">
+                <header class="top-header">
+                    <div>
+                        <h1 id="welcome-user-title">¡Hola, bienvenido a tu portal! 👋</h1>
+                        <p class="subtitle">Gestiona tus compras de carbón y realiza nuevos pedidos rápidamente con nuestro asistente</p>
+                    </div>
+                </header>
 
-            <!-- Tarjetas de Métricas -->
-            <section class="cards-grid">
-                <div class="metric-card">
-                    <div class="card-icon orange"><i class="ph-bold ph-receipt"></i></div>
-                    <div class="card-info">
-                        <h3>Pedidos Registrados</h3>
-                        <p id="total-pedidos">0</p>
+                <!-- Tarjeta de Catálogo Rápido -->
+                <section class="cards-grid" style="grid-template-columns: 1fr;">
+                    <div class="metric-card" style="display: flex; justify-content: space-between; align-items: center; padding: 25px; border-left: 4px solid var(--accent);">
+                        <div class="card-info">
+                            <h3 style="font-size: 1.2rem; color: #fff;">Bulto de Carbón Vegetal (10 Kg)</h3>
+                            <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 5px;">Carbón de alta calidad, ideal para asados y restaurantes.</p>
+                            <p class="price" style="font-size: 1.5rem; font-weight: bold; color: var(--green); margin-top: 10px;">$35.000 COP / unidad</p>
+                        </div>
+                        <div class="card-icon orange" style="width: 60px; height: 60px; font-size: 2rem;"><i class="ph-bold ph-fire"></i></div>
                     </div>
-                </div>
-                <div class="metric-card">
-                    <div class="card-icon amber"><i class="ph-bold ph-package"></i></div>
-                    <div class="card-info">
-                        <h3>Bultos Vendidos</h3>
-                        <p id="total-bultos">0</p>
-                    </div>
-                </div>
-                <div class="metric-card">
-                    <div class="card-icon blue"><i class="ph-bold ph-user-plus"></i></div>
-                    <div class="card-info">
-                        <h3>Clientes Nuevos</h3>
-                        <p id="clientes-nuevos">0</p>
-                    </div>
-                </div>
-                <div class="metric-card">
-                    <div class="card-icon green"><i class="ph-bold ph-currency-dollar"></i></div>
-                    <div class="card-info">
-                        <h3>Ventas Totales</h3>
-                        <p id="ventas-totales">$0</p>
-                    </div>
-                </div>
-            </section>
+                </section>
 
-            <!-- Layout Dividido -->
-            <div class="dashboard-split">
-                <!-- Tabla de Pedidos -->
-                <section class="panel table-panel">
-                    <div class="panel-header">
-                        <h2><i class="ph-bold ph-list-numbers"></i> Pedidos Gestionados por el Agente</h2>
-                    </div>
+                <!-- Layout Dividido -->
+                <div class="dashboard-split">
+                    <!-- Tabla Personal de Pedidos -->
+                    <section class="panel table-panel">
+                        <div class="panel-header">
+                            <h2><i class="ph-bold ph-list-numbers"></i> Mis Pedidos Realizados</h2>
+                        </div>
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>ID Pedido</th>
+                                        <th>Detalle del Producto</th>
+                                        <th>Total a Pagar</th>
+                                        <th>Estado del Pago</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabla-pedidos">
+                                    <!-- Se cargarán los pedidos desde Supabase -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <!-- Consola del Agente de IA con OpenRouter -->
+                    <section class="panel chat-panel">
+                        <div class="panel-header">
+                            <h2><i class="ph-bold ph-robot"></i> Asistente Virtual de Ventas</h2>
+                            <span class="chat-user-tag">Gemini Flash Lite</span>
+                        </div>
+                        <div class="chat-messages" id="chat-box"></div>
+                        <form id="chat-form" class="chat-input-container">
+                            <input type="text" id="chat-input" placeholder="Ej: Quiero pedir 3 bultos..." autocomplete="off" required>
+                            <button type="submit" class="btn-send"><i class="ph-bold ph-paper-plane-right"></i></button>
+                        </form>
+                    </section>
+                </div>
+            </div>
+
+            <!-- Vista 2: Mis Pedidos -->
+            <div id="vista-pedidos" class="vista-contenido" style="display: none;">
+                <header class="top-header">
+                    <h1>Historial de Pedidos</h1>
+                    <p class="subtitle">Consulta detallada de todas las transacciones en Supabase</p>
+                </header>
+                <div class="panel" style="padding: 25px;">
                     <div class="table-responsive">
                         <table>
                             <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>Cliente</th>
-                                    <th>Tipo</th>
-                                    <th>Bultos</th>
-                                    <th>Total</th>
+                                    <th>Cantidad Bultos</th>
+                                    <th>Total (COP)</th>
                                     <th>Estado</th>
+                                    <th>Dirección</th>
                                 </tr>
                             </thead>
-                            <tbody id="tabla-pedidos">
-                                <!-- Se cargarán los pedidos dinámicamente -->
-                            </tbody>
+                            <tbody id="tabla-pedidos-completa"></tbody>
                         </table>
                     </div>
-                </section>
+                </div>
+            </div>
 
-                <!-- Consola del Agente de IA -->
-                <section class="panel chat-panel">
-                    <div class="panel-header">
-                        <h2><i class="ph-bold ph-robot"></i> Consola de Prueba del Agente IA</h2>
-                        <span class="chat-user-tag">Agente Activo</span>
-                    </div>
-                    <div class="chat-messages" id="chat-box">
-                        <!-- Mensajes cargados dinámicamente -->
-                    </div>
-                    
-                    <form id="chat-form" class="chat-input-container">
-                        <input type="text" id="chat-input" placeholder="Escribe un mensaje al Agente de IA..." autocomplete="off" required>
-                        <button type="submit" class="btn-send"><i class="ph-bold ph-paper-plane-right"></i></button>
-                    </form>
-                </section>
+            <!-- Vista 3: Soporte IA -->
+            <div id="vista-soporte" class="vista-contenido" style="display: none;">
+                <header class="top-header">
+                    <h1>Soporte Comercial e IA</h1>
+                    <p class="subtitle">Atención directa sobre nuestros productos de carbón en Bucaramanga</p>
+                </header>
+                <div class="panel" style="padding: 25px; text-align: center; color: var(--text-muted);">
+                    <i class="ph-bold ph-headset" style="font-size: 3rem; color: var(--accent); margin-bottom: 15px;"></i>
+                    <p>Puedes usar el asistente virtual integrado en "Mi Portal" para resolver cualquier duda o realizar tus pedidos al instante.</p>
+                </div>
             </div>
         </main>
     </div>
 
+    <!-- Script principal de la aplicación -->
     <script src="./js/main.js"></script>
 </body>
 </html>
