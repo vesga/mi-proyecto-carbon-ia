@@ -6,7 +6,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_hx99kGNl5tBmaLrszIn_Rg_BhwEhV9H";
 
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-const OPENROUTER_API_KEY = "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";
+const OPENROUTER_API_KEY = "AQUI_VA_LA_KEY_DE_OPENROUTER";
 const MODEL = "google/gemini-2.5-flash-lite";
 const API_URL = "https://openrouter.ai/api/v1/chat/completions";
 
