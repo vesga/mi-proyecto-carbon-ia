@@ -14,13 +14,13 @@
 </head>
 <body>
 
-    <!-- PANTALLA DE ACCESO INTELIGENTE -->
+    <!-- PANTALLA DE ACCESO MÍNIMA (Solo Teléfono) -->
     <div id="auth-screen" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #0f172a; display: flex; justify-content: center; align-items: center; z-index: 9999;">
-        <div style="background: #1e293b; padding: 40px; border-radius: 16px; border: 1px solid #334155; width: 100%; max-width: 450px; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
+        <div style="background: #1e293b; padding: 40px; border-radius: 16px; border: 1px solid #334155; width: 100%; max-width: 400px; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
             <div style="text-align: center; margin-bottom: 25px;">
                 <i class="ph-bold ph-fire" style="font-size: 3rem; color: #ea580c;"></i>
                 <h2 style="color: #fff; font-size: 1.8rem; margin-top: 10px;">Carbón<span>IA</span></h2>
-                <p style="color: #94a3b8; font-size: 0.9rem; margin-top: 5px;">Digita tu teléfono para ingresar o registrarte</p>
+                <p style="color: #94a3b8; font-size: 0.9rem; margin-top: 5px;">Ingresa con tu número de teléfono</p>
             </div>
             
             <form id="auth-form" style="display: flex; flex-direction: column; gap: 15px;">
@@ -28,14 +28,7 @@
                     <label style="color: #cbd5e1; font-size: 0.85rem; display: block; margin-bottom: 5px;">Número de Teléfono</label>
                     <input type="text" id="auth-telefono" placeholder="Ej: 3001234567" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: #fff; font-size: 1rem;">
                 </div>
-
-                <!-- Campo de Nombre oculto por defecto (aparece solo si el usuario es nuevo) -->
-                <div id="nombre-container" style="display: none;">
-                    <label style="color: #cbd5e1; font-size: 0.85rem; display: block; margin-bottom: 5px;">Nombre Completo (Nuevo Usuario)</label>
-                    <input type="text" id="auth-nombre" placeholder="Ej: Nikolas Vesga" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: #fff; font-size: 1rem;">
-                </div>
-
-                <button type="submit" id="auth-btn" style="padding: 12px; background: #ea580c; color: #fff; border: none; border-radius: 8px; font-weight: bold; font-size: 1rem; cursor: pointer; margin-top: 10px;">Verificar Teléfono</button>
+                <button type="submit" id="auth-btn" style="padding: 12px; background: #ea580c; color: #fff; border: none; border-radius: 8px; font-weight: bold; font-size: 1rem; cursor: pointer; margin-top: 10px;">Ingresar al Portal</button>
             </form>
             <div id="auth-status" style="margin-top: 15px; font-size: 0.9rem; text-align: center; color: #38bdf8;"></div>
         </div>
@@ -50,7 +43,8 @@
                 <h2>Carbón<span>IA</span></h2>
             </div>
             <nav class="nav-menu">
-                <a href="#" class="nav-item active" data-target="vista-portal"><i class="ph-bold ph-storefront"></i> Mi Portal</a>
+                <a href="#" class="nav-item active" data-target="vista-portal"><i class="ph-bold ph-storefront"></i> Mi Portal (Chat)</a>
+                <a href="#" class="nav-item" data-target="vista-perfil"><i class="ph-bold ph-user"></i> Mis Datos</a>
                 <a href="#" class="nav-item" data-target="vista-pedidos"><i class="ph-bold ph-shopping-bag"></i> Mis Pedidos</a>
                 <a href="#" class="nav-item" data-target="vista-soporte"><i class="ph-bold ph-headset"></i> Soporte IA</a>
             </nav>
@@ -63,82 +57,143 @@
         <!-- Contenido Principal -->
         <main class="main-content">
             
-            <!-- Vista 1: Mi Portal -->
+            <!-- Vista 1: Mi Portal (Catálogo Variado + Chat de Ventas + Pedido Actual) -->
             <div id="vista-portal" class="vista-contenido">
                 <header class="top-header">
                     <div>
                         <h1 id="welcome-user-title">¡Hola, bienvenido a tu portal! 👋</h1>
-                        <p class="subtitle">Gestiona tus compras de carbón y realiza nuevos pedidos rápidamente con nuestro asistente</p>
+                        <p class="subtitle">Explora nuestra variedad de carbón e interactúa con el asistente para realizar tus pedidos</p>
                     </div>
                 </header>
 
-                <!-- Tarjeta de Catálogo Rápido -->
-                <section class="cards-grid" style="grid-template-columns: 1fr;">
-                    <div class="metric-card" style="display: flex; justify-content: space-between; align-items: center; padding: 25px; border-left: 4px solid var(--accent);">
-                        <div class="card-info">
-                            <h3 style="font-size: 1.2rem; color: #fff;">Bulto de Carbón Vegetal (10 Kg)</h3>
-                            <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 5px;">Carbón de alta calidad, ideal para asados y restaurantes.</p>
-                            <p class="price" style="font-size: 1.5rem; font-weight: bold; color: var(--green); margin-top: 10px;">$35.000 COP / unidad</p>
-                        </div>
-                        <div class="card-icon orange" style="width: 60px; height: 60px; font-size: 2rem;"><i class="ph-bold ph-fire"></i></div>
+                <div class="dashboard-split" style="grid-template-columns: 1fr 1.3fr;">
+                    <!-- Panel Izquierdo: Catálogo Variado y Pedido Actual -->
+                    <div style="display: flex; flex-direction: column; gap: 20px;">
+                        <section class="panel" style="padding: 20px;">
+                            <h2 style="font-size: 1.1rem; color: #fff; margin-bottom: 15px;"><i class="ph-bold ph-storefront"></i> Catálogo de Productos</h2>
+                            
+                            <div style="display: flex; flex-direction: column; gap: 15px;">
+                                <!-- Producto 1 -->
+                                <div style="display: flex; gap: 12px; background: #0f172a; padding: 12px; border-radius: 8px; border: 1px solid #334155; align-items: center;">
+                                    <img src="https://images.unsplash.com/photo-1544025162-d76694265947?w=150" alt="Carbón Vegetal" style="width: 60px; height: 60px; object-fit: cover; border-radius: 6px;">
+                                    <div style="flex: 1;">
+                                        <h4 style="color: #fff; font-size: 0.95rem;">Bulto Estándar (10 Kg)</h4>
+                                        <p style="color: var(--text-muted); font-size: 0.75rem;">Ideal para asados caseros.</p>
+                                        <p style="color: var(--green); font-weight: bold; font-size: 0.9rem; margin-top: 4px;">$35.000 COP</p>
+                                    </div>
+                                </div>
+
+                                <!-- Producto 2 -->
+                                <div style="display: flex; gap: 12px; background: #0f172a; padding: 12px; border-radius: 8px; border: 1px solid #334155; align-items: center;">
+                                    <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=150" alt="Carbón Premium" style="width: 60px; height: 60px; object-fit: cover; border-radius: 6px;">
+                                    <div style="flex: 1;">
+                                        <h4 style="color: #fff; font-size: 0.95rem;">Carbón Premium (Restaurantes)</h4>
+                                        <p style="color: var(--text-muted); font-size: 0.75rem;">Alta duración y brasa estable.</p>
+                                        <p style="color: var(--green); font-weight: bold; font-size: 0.9rem; margin-top: 4px;">$45.000 COP</p>
+                                    </div>
+                                </div>
+
+                                <!-- Producto 3 -->
+                                <div style="display: flex; gap: 12px; background: #0f172a; padding: 12px; border-radius: 8px; border: 1px solid #334155; align-items: center;">
+                                    <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=150" alt="Carbón Ecológico" style="width: 60px; height: 60px; object-fit: cover; border-radius: 6px;">
+                                    <div style="flex: 1;">
+                                        <h4 style="color: #fff; font-size: 0.95rem;">Carbón Ecológico de Coco</h4>
+                                        <p style="color: var(--text-muted); font-size: 0.75rem;">Cero humo y eco-amigable.</p>
+                                        <p style="color: var(--green); font-weight: bold; font-size: 0.9rem; margin-top: 4px;">$50.000 COP</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Panel de Pedido Actual -->
+                        <section class="panel" style="padding: 20px;">
+                            <h2 style="font-size: 1.1rem; color: #fff; margin-bottom: 15px;"><i class="ph-bold ph-shopping-cart"></i> Pedido Actual</h2>
+                            <div class="table-responsive">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Detalle</th>
+                                            <th>Total</th>
+                                            <th>Estado</th>
+                                            <th>Acción</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tabla-pedido-actual">
+                                        <!-- Cargado dinámicamente -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </section>
                     </div>
-                </section>
 
-                <!-- Layout Dividido -->
-                <div class="dashboard-split">
-                    <!-- Tabla Personal de Pedidos -->
-                    <section class="panel table-panel">
-                        <div class="panel-header">
-                            <h2><i class="ph-bold ph-list-numbers"></i> Mis Pedidos Realizados</h2>
-                        </div>
-                        <div class="table-responsive">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>ID Pedido</th>
-                                        <th>Detalle del Producto</th>
-                                        <th>Total a Pagar</th>
-                                        <th>Estado del Pago</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tabla-pedidos">
-                                    <!-- Se cargarán los pedidos desde Supabase -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </section>
-
-                    <!-- Consola del Agente de IA con OpenRouter -->
-                    <section class="panel chat-panel">
+                    <!-- Panel Derecho: Consola del Asistente IA con Adjunto de Pagos -->
+                    <section class="panel chat-panel" style="height: 680px;">
                         <div class="panel-header">
                             <h2><i class="ph-bold ph-robot"></i> Asistente Virtual de Ventas</h2>
                             <span class="chat-user-tag">Gemini Flash Lite</span>
                         </div>
-                        <div class="chat-messages" id="chat-box"></div>
-                        <form id="chat-form" class="chat-input-container">
-                            <input type="text" id="chat-input" placeholder="Ej: Quiero pedir 3 bultos..." autocomplete="off" required>
+                        <div class="chat-messages" id="chat-box" style="height: 480px;"></div>
+                        
+                        <!-- Indicador visual de archivo cargado -->
+                        <div id="file-indicator" style="padding: 6px 12px; font-size: 0.8rem; color: #38bdf8; background: #0f172a; border-top: 1px solid #334155; display: none; align-items: center; gap: 8px;">
+                            <i class="ph-bold ph-paperclip"></i> <span id="file-name-text">Ningún archivo seleccionado</span>
+                        </div>
+
+                        <form id="chat-form" class="chat-input-container" style="display: flex; gap: 8px; align-items: center;">
+                            <label for="chat-file" style="cursor: pointer; color: var(--text-muted); font-size: 1.2rem; padding: 0 5px;" title="Adjuntar comprobante (PDF/Imagen)">
+                                <i class="ph-bold ph-paperclip"></i>
+                            </label>
+                            <input type="file" id="chat-file" accept=".pdf,image/*" style="display: none;">
+                            
+                            <input type="text" id="chat-input" placeholder="Escribe tu mensaje o adjunta tu comprobante..." autocomplete="off" style="flex: 1;">
                             <button type="submit" class="btn-send"><i class="ph-bold ph-paper-plane-right"></i></button>
                         </form>
                     </section>
                 </div>
             </div>
 
-            <!-- Vista 2: Mis Pedidos -->
+            <!-- Vista 2: Mis Datos Personales (Perfil) -->
+            <div id="vista-perfil" class="vista-contenido" style="display: none;">
+                <header class="top-header">
+                    <h1>Mis Datos Personales</h1>
+                    <p class="subtitle">Información registrada en nuestra base de datos para envíos</p>
+                </header>
+                <div class="panel" style="padding: 30px; max-width: 600px;">
+                    <div style="display: flex; flex-direction: column; gap: 20px;">
+                        <div>
+                            <label style="color: var(--text-muted); font-size: 0.85rem; display: block; margin-bottom: 5px;">Nombre Completo</label>
+                            <div id="perfil-nombre" style="background: #0f172a; padding: 12px; border-radius: 8px; border: 1px solid #334155; color: #fff; font-size: 1rem;">Cargando...</div>
+                        </div>
+                        <div>
+                            <label style="color: var(--text-muted); font-size: 0.85rem; display: block; margin-bottom: 5px;">Número de Teléfono</label>
+                            <div id="perfil-telefono" style="background: #0f172a; padding: 12px; border-radius: 8px; border: 1px solid #334155; color: #fff; font-size: 1rem;">-</div>
+                        </div>
+                        <div>
+                            <label style="color: var(--text-muted); font-size: 0.85rem; display: block; margin-bottom: 5px;">Dirección de Entrega en Bucaramanga</label>
+                            <div id="perfil-direccion" style="background: #0f172a; padding: 12px; border-radius: 8px; border: 1px solid #334155; color: #fff; font-size: 1rem;">-</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vista 3: Mis Pedidos (Historial Completo) -->
             <div id="vista-pedidos" class="vista-contenido" style="display: none;">
                 <header class="top-header">
                     <h1>Historial de Pedidos</h1>
-                    <p class="subtitle">Consulta detallada de todas las transacciones en Supabase</p>
+                    <p class="subtitle">Consulta detallada de todas tus transacciones</p>
                 </header>
                 <div class="panel" style="padding: 25px;">
                     <div class="table-responsive">
                         <table>
                             <thead>
                                 <tr>
-                                    <th>ID</th>
+                                    <th>ID Pedido</th>
                                     <th>Cantidad Bultos</th>
                                     <th>Total (COP)</th>
-                                    <th>Estado</th>
+                                    <th>Estado del Pago</th>
                                     <th>Dirección</th>
+                                    <th>Recibo</th>
                                 </tr>
                             </thead>
                             <tbody id="tabla-pedidos-completa"></tbody>
@@ -147,15 +202,20 @@
                 </div>
             </div>
 
-            <!-- Vista 3: Soporte IA -->
+            <!-- Vista 4: Soporte IA (Asistente FAQ Independiente) -->
             <div id="vista-soporte" class="vista-contenido" style="display: none;">
                 <header class="top-header">
                     <h1>Soporte Comercial e IA</h1>
-                    <p class="subtitle">Atención directa sobre nuestros productos de carbón en Bucaramanga</p>
+                    <p class="subtitle">Pregúntale lo que quieras a nuestro asistente sobre envíos, pagos y productos</p>
                 </header>
-                <div class="panel" style="padding: 25px; text-align: center; color: var(--text-muted);">
-                    <i class="ph-bold ph-headset" style="font-size: 3rem; color: var(--accent); margin-bottom: 15px;"></i>
-                    <p>Puedes usar el asistente virtual integrado en "Mi Portal" para resolver cualquier duda o realizar tus pedidos al instante.</p>
+                <div class="panel" style="padding: 20px; max-width: 800px;">
+                    <div class="chat-messages" id="soporte-chat-box" style="height: 400px; background: #0f172a; padding: 15px; border-radius: 8px; overflow-y: auto; margin-bottom: 15px;">
+                        <div class="msg bot">¡Hola! Soy tu asistente de soporte técnico y comercial en Bucaramanga. ¿Tienes dudas sobre nuestros tipos de carbón, tiempos de entrega o métodos de pago? ¡Pregúntame con confianza! 💬</div>
+                    </div>
+                    <form id="soporte-form" style="display: flex; gap: 8px;">
+                        <input type="text" id="soporte-input" placeholder="Ej: ¿Cuánto tarda el envío a Cañaveral?" autocomplete="off" required style="flex: 1; padding: 12px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: #fff;">
+                        <button type="submit" style="padding: 12px 20px; background: #ea580c; color: #fff; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;"><i class="ph-bold ph-paper-plane-right"></i></button>
+                    </form>
                 </div>
             </div>
         </main>
